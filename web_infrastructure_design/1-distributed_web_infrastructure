@@ -1,0 +1,76 @@
+https://prnt.sc/grCBOBf_F63u
+
+# Design for a Three-Server Web Infrastructure Hosting www.foobar.com
+
+• Load Balancer (HAProxy):
+Purpose: 
+Distributes incoming traffic across multiple servers to improve availability and performance.
+
+Reason for Addition: 
+Ensures the system can handle higher traffic and provides failover in case one application server becomes unavailable.
+
+• Two Servers for Web/Application:
+Web Server (Nginx):
+Handles static content and acts as a reverse proxy for dynamic requests to the application server.
+Application Server: 
+Processes dynamic requests and communicates with the database.
+Reason for Addition: 
+Allows horizontal scaling of the application tier for improved performance and fault tolerance.
+
+• Database (MySQL):
+Configured as a Primary-Replica Cluster.
+Primary Node: Handles all write operations.
+Replica Node: Handles read operations.
+Reason for Addition: Improves database availability and performance, with a failover mechanism in case of a primary database failure.
+
+# Distribution Algorithm for the Load Balancer
+
+Algorithm: Round Robin.
+
+Each incoming request is distributed sequentially to the available servers in turn.
+How it Works: If there are two servers, requests will alternate between them. This ensures an even distribution of traffic.
+Other options include Least Connections (directs requests to the server with the fewest active connections) and IP Hash (directs requests based on the client’s IP).
+
+# Active-Active vs. Active-Passive Load Balancer Setups
+
+• Active-Active:
+Both servers are actively handling requests simultaneously.
+
+Advantages: Better resource utilization and higher throughput.
+Disadvantages: More complex synchronization and potential for conflicts.
+
+• Active-Passive:
+One server actively handles requests, while the other remains idle until the active server fails.
+
+Advantages: Simplified failover mechanism.
+Disadvantages: Wasted resources during idle time.
+
+# Database Primary-Replica Cluster
+
+• How it Works:
+The Primary Node handles all write operations. Changes are then asynchronously or semi-synchronously replicated to the Replica Node.
+The Replica Node handles read-only queries to offload work from the primary.
+
+• Differences Between Nodes:
+
+Primary Node:
+Can handle both read and write operations.
+Central point of truth for the database.
+
+Replica Node:
+Only processes read requests.
+Cannot perform writes (unless promoted to primary in a failover scenario).
+
+# Issues with this Infrastructure
+
+• Single Points of Failure (SPOF):
+Load Balancer: If the load balancer fails, no traffic can be distributed.
+
+Primary Database: If the primary node fails, write operations will stop unless failover mechanisms are in place.
+
+• Security Issues:
+No firewall to filter unauthorized access.
+Lack of HTTPS exposes data to interception during transit.
+
+• No Monitoring:
+Without a monitoring system, it is difficult to detect issues like high CPU usage, downtime, or database replication lag.
