@@ -1,0 +1,55 @@
+https://prnt.sc/2LlhcJrDAoBg
+
+# Explanation of Added Elements
+
+• Firewalls:
+Purpose: Block unauthorized access to the servers.
+
+Placement:
+Between external traffic and the load balancer.
+Between the load balancer and web/application servers.
+Between application servers and database servers.
+
+Benefit: Protects each layer of the infrastructure from intrusion.
+
+• HTTPS (SSL Certificate):
+Purpose: Encrypts communication between the user’s browser and the load balancer.
+
+Why HTTPS:
+Protects sensitive data (e.g., passwords, payment information).
+Prevents eavesdropping and MITM (Man-in-the-Middle) attacks.
+Improves user trust and SEO rankings.
+
+• Monitoring Tools:
+Purpose: Tracks performance, logs errors, and provides alerts for anomalies.
+
+How It Collects Data:
+Monitoring agents collect metrics like CPU, memory, disk usage, QPS (queries per second), and HTTP response times.
+Data is sent to a centralized dashboard for visualization and alerting.
+
+Monitoring Web Server QPS:
+Set up a log parser on Nginx to count requests per second using tools like logstash or custom scripts.
+Monitor metrics using services like Sumologic, Prometheus, or Grafana.
+
+# Issues with This Infrastructure
+
+• SSL Termination at the Load Balancer Level:
+
+Problem:
+Traffic between the load balancer and application servers is unencrypted.
+If compromised, sensitive data can be intercepted.
+Solution: Use end-to-end encryption by installing SSL certificates on both the load balancer and application servers.
+
+• Single MySQL Server for Writes:
+
+Problem:
+The primary database server becomes a bottleneck.
+Failure of the primary server causes downtime unless failover is manually or automatically configured.
+Solution: Implement a high availability cluster with automatic failover (e.g., MySQL Group Replication or Galera Cluster).
+
+• Servers with All Components Installed:
+
+Problem:
+Limits scalability and performance.
+If one server fails, all components (web, application, database) on that server are impacted.
+Solution: Use dedicated servers for each role (e.g., separate database servers, application servers, and web servers).
