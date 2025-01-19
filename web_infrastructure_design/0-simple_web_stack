@@ -1,0 +1,46 @@
+https://prnt.sc/lyX8hyV3VhBq
+
+# Step by Step Flow
+
+• User Interaction:
+The user types www.foobar.com in the browser.
+
+• DNS Resolution:
+The browser queries the DNS to resolve www.foobar.com to the server's IP (8.8.8.8).
+
+• HTTP Request:
+The browser sends an HTTP request (e.g., GET /index.html or GET /api/data) to 8.8.8.8.
+Web Server (Nginx):
+
+• Static Content:
+If the request is for static files (e.g., /index.html, /style.css, or /script.js), Nginx serves these files directly from the server's file system.
+• Dynamic Content:
+If the request is for dynamic content (e.g., /api/data or /user/login), Nginx forwards the request to the application server.
+
+• Application Server:
+Receives the forwarded request from Nginx.
+
+• Executes the application code to generate a response:
+For example, if the request is /user/123, the application server may query the database to fetch user information and format it as JSON or HTML.
+Sends the response back to Nginx.
+
+• Database (MySQL):
+The application server connects to the database to retrieve or store data as needed.
+
+• Final Response to Browser:
+Nginx receives the response from the application server (e.g., HTML or JSON).
+Sends this response back to the browser for display to the user.
+
+
+# Issues with This Infrastructure
+
+• Single Point of Failure (SPOF):
+If the server goes down, the entire website becomes inaccessible.
+
+• Downtime During Maintenance:
+Deploying updates or restarting the web server interrupts service.
+Users attempting to access the site during maintenance will encounter errors.
+
+• Scalability Limitations:
+A single server cannot handle a high volume of concurrent users.
+Limited resources (CPU, RAM, and disk space) restrict the infrastructure's ability to scale under heavy load.
